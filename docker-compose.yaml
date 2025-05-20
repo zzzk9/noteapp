@@ -26,7 +26,7 @@ services:
     build:
       context: ./front
     ports:
-      - "80:80"
+      - "81:81"
     depends_on:
       backend:
         condition: service_healthy
