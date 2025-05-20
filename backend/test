@@ -1,0 +1,37 @@
+pipeline {
+    agent any
+
+    environment {
+        COMPOSE_PROJECT_NAME = "noteapp"
+        MYSQL_ROOT_PASSWORD = credentials('mysql_root_password') // Make sure this credential exists in Jenkins
+    }
+
+    stages {
+        stage('Checkout') {
+            steps {
+                git branch: 'main', url: 'https://github.com/zzzk9/noteapp.git'
+            }
+        }
+
+        stage('Build Docker Images') {
+            steps {
+                sh 'docker compose build'
+            }
+        }
+
+        stage('Run Containers') {
+            steps {
+                sh 'docker compose up -d'
+            }
+        }
+    }
+
+    post {
+        success {
+            echo '✅ Deployment successful!'
+        }
+        failure {
+            echo '❌ Build failed. Check logs.'
+        }
+    }
+}

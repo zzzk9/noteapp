@@ -4,4 +4,4 @@ COPY . .
 RUN apk --no-cache add curl
 RUN npm install
 CMD [ "node", "server.js" ]
-EXPOSE 8080
+EXPOSE 8081
