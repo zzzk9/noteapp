@@ -1,0 +1,72 @@
+services:
+  backend:
+    restart: always
+    image: ${CI_REGISTRY_IMAGE}/backend:dev-${CI_COMMIT_SHORT_SHA}
+    container_name: backend-${CI_COMMIT_SHORT_SHA}
+    build:
+      context: ./backend
+    ports:
+      - "8080:8080"
+    depends_on:
+      db:
+        condition: service_healthy
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:8080"]
+      interval: 30s
+      timeout: 1m
+      retries: 15
+      start_period: 60s
+    networks:
+      - note-app-net
+
+  frontend:
+    restart: always
+    image: ${CI_REGISTRY_IMAGE}/frontend:dev-${CI_COMMIT_SHORT_SHA}
+    container_name: frontend-${CI_COMMIT_SHORT_SHA}
+    build:
+      context: ./front
+    ports:
+      - "80:80"
+    depends_on:
+      backend:
+        condition: service_healthy
+    networks:
+      - note-app-net
+
+  db:
+    image: mysql
+    container_name: note-db
+    restart: always # always restart
+    environment:
+      MYSQL_DATABASE: "collection" # name of database
+      MYSQL_ROOT_PASSWORD: ${MYSQL_ROOT_PASSWORD} # password for root user
+    expose: # expose port to other container within the docker compose net, but not publish to host
+      - "3306"
+    volumes:
+      - mysql-db:/var/lib/mysql
+      - .docker/setup.sql:/docker-entrypoint-initdb.d/setup.sql
+    healthcheck:
+      test:
+        [
+          "CMD",
+          "mysqladmin",
+          "ping",
+          "-h",
+          "localhost",
+          "-u",
+          "root",
+          "-p${MYSQL_ROOT_PASSWORD}",
+        ]
+      interval: 30s
+      timeout: 1m
+      retries: 15
+      start_period: 60s
+    networks:
+      - note-app-net
+
+volumes:
+  mysql-db:
+
+networks:
+  note-app-net:
+    driver: bridge
