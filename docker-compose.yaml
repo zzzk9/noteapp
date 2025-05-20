@@ -1,8 +1,8 @@
 services:
   backend:
     restart: always
-    image: ${CI_REGISTRY_IMAGE}/backend:dev-${CI_COMMIT_SHORT_SHA}
-    container_name: backend-${CI_COMMIT_SHORT_SHA}
+    #image: ${CI_REGISTRY_IMAGE}/backend:dev-${CI_COMMIT_SHORT_SHA}
+    #container_name: backend-${CI_COMMIT_SHORT_SHA}
     build:
       context: ./backend
     ports:
@@ -14,15 +14,15 @@ services:
       test: ["CMD", "curl", "-f", "http://localhost:8080"]
       interval: 30s
       timeout: 1m
-      retries: 15
+      retries: 10
       start_period: 60s
     networks:
       - note-app-net
 
   frontend:
     restart: always
-    image: ${CI_REGISTRY_IMAGE}/frontend:dev-${CI_COMMIT_SHORT_SHA}
-    container_name: frontend-${CI_COMMIT_SHORT_SHA}
+    #image: ${CI_REGISTRY_IMAGE}/frontend:dev-${CI_COMMIT_SHORT_SHA}
+    #container_name: frontend-${CI_COMMIT_SHORT_SHA}
     build:
       context: ./front
     ports:
