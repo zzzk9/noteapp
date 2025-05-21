@@ -7,7 +7,7 @@ const Header = () => {
     <div className="header">
       <nav class="navbar navbar-expand-lg navbar-light bg-light">
         <Link to="/">Notes</Link>
-        <Link to="/add">Add Note</Link>
+        <Link to="/add">Add Notes</Link>
       </nav>
     </div>
   );
