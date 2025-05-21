@@ -6,5 +6,5 @@ RUN npm run build
 
 FROM nginx
 COPY --from=builder /frontend/build /usr/share/nginx/html
-EXPOSE 81
+EXPOSE 80
 ENTRYPOINT ["nginx", "-g", "daemon off;"]
