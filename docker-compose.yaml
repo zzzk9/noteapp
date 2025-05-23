@@ -1,8 +1,6 @@
 services:
   backend:
     restart: always
-    #image: ${CI_REGISTRY_IMAGE}/backend:dev-${CI_COMMIT_SHORT_SHA}
-    #container_name: backend-${CI_COMMIT_SHORT_SHA}
     build:
       context: ./backend
     ports:
@@ -21,8 +19,6 @@ services:
 
   frontend:
     restart: always
-    #image: ${CI_REGISTRY_IMAGE}/frontend:dev-${CI_COMMIT_SHORT_SHA}
-    #container_name: frontend-${CI_COMMIT_SHORT_SHA}
     build:
       context: ./front
     ports:
@@ -36,11 +32,11 @@ services:
   db:
     image: mysql
     container_name: note-db
-    restart: always # always restart
+    restart: always
     environment:
-      MYSQL_DATABASE: "collection" # name of database
-      MYSQL_ROOT_PASSWORD: ${MYSQL_ROOT_PASSWORD} # password for root user
-    expose: # expose port to other container within the docker compose net, but not publish to host
+      MYSQL_DATABASE: "collection"
+      MYSQL_ROOT_PASSWORD: ${MYSQL_ROOT_PASSWORD}
+    expose: 
       - "3306"
     volumes:
       - mysql-db:/var/lib/mysql
